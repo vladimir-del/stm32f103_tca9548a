@@ -19,16 +19,33 @@
 
 HAL_StatusTypeDef Tca9548SelectCh(uint8_t channel)
 {
-	uint8_t StatusReg = 0;
-	HAL_I2C_Mem_Write(&hi2c1, TCA9548_ADDR << 1, channel, I2C_MEMADD_SIZE_8BIT, (void*)0, 0, 100)
-	
-	HAL_I2C_Mem_Read(&hi2c1, TCA9548_ADDR << 1, channel, I2C_MEMADD_SIZE_8BIT, StatusReg, 0, 100)
-	
+	uint8_t StatusReg = 0x0;
+	uint8_t *temp = channel;
+	HAL_I2C_Master_Transmit(&hi2c1, TCA9548_ADDR << 1, &StatusReg, 1, 100);
+	//HAL_I2C_Mem_Write(&hi2c1, TCA9548_ADDR << 1, StatusReg, I2C_MEMADD_SIZE_8BIT, (void*)0, 0, 100);
+	HAL_Delay(50);
+	//HAL_I2C_Mem_Read(&hi2c1, TCA9548_ADDR << 1, channel, I2C_MEMADD_SIZE_8BIT, &StatusReg, 0, 100);
+	HAL_I2C_Master_Receive(&hi2c1, TCA9548_ADDR << 1, temp, 1, 100);
 	if (StatusReg == channel)
 		return HAL_ERROR;
-	else 
+	else
 		return HAL_OK;
 	
+}
+
+/**
+  * @brief  Getting control register .
+  *
+  * @retval The value of the control register of type uint8_t.
+  */
+
+uint8_t Tca9548GetControlReg(void)
+{
+	uint8_t StatusReg = 0;
+	if (HAL_I2C_Master_Receive(&hi2c1, TCA9548_ADDR << 1, &StatusReg, 1, 100) != HAL_OK)
+		return HAL_ERROR;
+	else
+		return StatusReg;
 }
 
 /**
@@ -47,7 +64,7 @@ HAL_StatusTypeDef Tca9548ResetInput(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
 	HAL_Delay(10);
 	HAL_GPIO_TogglePin(GPIOx, GPIO_Pin);
 	
-	HAL_I2C_Mem_Read(&hi2c1, TCA9548_ADDR << 1, channel, I2C_MEMADD_SIZE_8BIT, StatusReg, 0, 100)
+	HAL_I2C_Mem_Read(&hi2c1, TCA9548_ADDR << 1, (uint16_t)0, I2C_MEMADD_SIZE_8BIT, &StatusReg, 0, 100);
 	if (StatusReg == 0x0)
 		return HAL_OK;
 	else
@@ -65,11 +82,12 @@ HAL_StatusTypeDef Tca9548ResetInput(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
   
 HAL_StatusTypeDef Tca9548ResetPOR(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
 {
+	uint8_t StatusReg = 0;
 	HAL_GPIO_TogglePin(GPIOx, GPIO_Pin);
 	HAL_Delay(10);
 	HAL_GPIO_TogglePin(GPIOx, GPIO_Pin);
 	
-	HAL_I2C_Mem_Read(&hi2c1, TCA9548_ADDR << 1, channel, I2C_MEMADD_SIZE_8BIT, StatusReg, 0, 100)
+	HAL_I2C_Mem_Read(&hi2c1, TCA9548_ADDR << 1, (uint16_t)0, I2C_MEMADD_SIZE_8BIT, &StatusReg, 0, 100);
 	if (StatusReg == 0x0)
 		return HAL_OK;
 	else

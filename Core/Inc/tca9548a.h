@@ -15,6 +15,9 @@ extern "C" {
 #include  "main.h"
 
 #define TCA9548_ADDR 0x70
+#define TCA9548_ADDR_WRITE 0xE0
+#define TCA9548_ADDR_READ 0xE1
+
 
 #define CH0_EN 0x1
 #define CH1_EN 0x2
@@ -28,6 +31,8 @@ extern "C" {
 
 
 HAL_StatusTypeDef Tca9548SelectCh(uint8_t channel);
+
+uint8_t Tca9548GetControlReg(void);
 
 HAL_StatusTypeDef Tca9548ResetInput(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin);
 
