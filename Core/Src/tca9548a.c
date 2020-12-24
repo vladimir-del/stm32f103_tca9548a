@@ -20,8 +20,8 @@
 HAL_StatusTypeDef Tca9548SelectCh(uint8_t channel)
 {
 	uint8_t StatusReg = 0x0;
-	uint8_t *temp = channel;
-	HAL_I2C_Master_Transmit(&hi2c1, TCA9548_ADDR << 1, &StatusReg, 1, 100);
+	uint8_t temp[1] = {channel};
+	HAL_I2C_Master_Transmit(&hi2c1, TCA9548_ADDR << 1, temp, 1, 100);
 	//HAL_I2C_Mem_Write(&hi2c1, TCA9548_ADDR << 1, StatusReg, I2C_MEMADD_SIZE_8BIT, (void*)0, 0, 100);
 	HAL_Delay(50);
 	//HAL_I2C_Mem_Read(&hi2c1, TCA9548_ADDR << 1, channel, I2C_MEMADD_SIZE_8BIT, &StatusReg, 0, 100);
