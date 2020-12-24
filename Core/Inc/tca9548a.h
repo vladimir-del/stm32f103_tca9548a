@@ -24,10 +24,13 @@ extern "C" {
 #define CH5_EN 0x20
 #define CH6_EN 0x40
 #define CH7_EN 0x80
+#define CHALL_DIS 0x0
 
 
-HAL_StatusTypeDef SelectCh(uint8_t channel);
+HAL_StatusTypeDef Tca9548SelectCh(uint8_t channel);
 
-void Reset_TCA9548(void);
+HAL_StatusTypeDef Tca9548ResetInput(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin);
+
+HAL_StatusTypeDef Tca9548ResetPOR(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin);
 
 #endif /* INC_TCA9548A_H_ */
