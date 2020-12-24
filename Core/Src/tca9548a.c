@@ -9,6 +9,14 @@
 #include "i2c.h"
 #include "gpio.h"
 
+/**
+  * @brief  Setting control register .
+  * @param  channel: select a channel to turn on.
+			This parametr defined in macros into tca9548.h CH0_EN ... CH7_EN. 
+			Can used bool operation. CH0_EN | CH7_EN == 1000 0001
+  * @retval hal status.
+  */
+
 HAL_StatusTypeDef Tca9548SelectCh(uint8_t channel)
 {
 	uint8_t StatusReg = 0;
@@ -23,7 +31,15 @@ HAL_StatusTypeDef Tca9548SelectCh(uint8_t channel)
 	
 }
 
-
+/**
+  * @brief  Reset control register .
+  * @param  GPIOx: where x can be (A..G depending on device used) to select the GPIO peripheral
+			GPIOx port configured for this function.
+  * @param  GPIO_Pin: GPIO_Pin: specifies the port bit to be toggled.
+			Pin configured for this function.
+  * @retval hal status.
+  */
+  
 HAL_StatusTypeDef Tca9548ResetInput(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
 {
 	uint8_t StatusReg = 0;
@@ -38,6 +54,15 @@ HAL_StatusTypeDef Tca9548ResetInput(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
 		return HAL_ERROR;
 }
 
+/**
+  * @brief  Reset control register .
+  * @param  GPIOx: where x can be (A..G depending on device used) to select the GPIO peripheral
+			GPIOx port configured for this function.
+  * @param  GPIO_Pin: GPIO_Pin: specifies the port bit to be toggled.
+			Pin configured for this function.
+  * @retval hal status.
+  */
+  
 HAL_StatusTypeDef Tca9548ResetPOR(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
 {
 	HAL_GPIO_TogglePin(GPIOx, GPIO_Pin);
