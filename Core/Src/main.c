@@ -101,24 +101,77 @@ uint8_t buf[40] = {0};
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  //test library tca9548a
+	/*---------------------*/
+	/*test library tca9548a*/
+	/*---------------------*/
+	
+	
+	/*---------------------*/
+	//check Tca9548GetControlReg
+	/*---------------------*/
+	
+	//get control register from tca9548
+	temp = Tca9548GetControlReg();
+	//send the value of the control register to UART2
+	sprintf(buf, "The value of the control register = %#x\n\r", temp);
+		HAL_UART_Transmit(&huart2, (uint8_t *)buf, strlen(buf), 100); 
+		HAL_Delay(500);
 
-	  //temp = Tca9548GetControlReg();//get control register from tca9548
-	  //sprintf(buf, "The value of the control register = %#x\n\r", temp);
-			  //HAL_UART_Transmit(&huart2, (uint8_t *)buf, strlen(buf), 1000); //send the value of the control register to UART2
-			  //HAL_Delay(500);
 
-	  Tca9548SelectCh(CH0_EN);
-	  //HAL_Delay(100);
+	/*---------------------*/
+	//check Tca9548SelectCh
+	/*---------------------*/
+	
+		
+	//set the value (CH0_EN | CH3_EN) of the control register.  CH0_EN | CH3_EN = 0000 1001b
+	Tca9548SelectCh(CH0_EN | CH3_EN); 
+	
+	//check seting the control register
+	temp = Tca9548GetControlReg();
+	//send the value of the control register to UART2
+	sprintf(buf, "The value of the control register after setting = %#x\n\r", temp);
+	HAL_UART_Transmit(&huart2, (uint8_t *)buf, strlen(buf), 100); 
+	HAL_Delay(500);
 
-	  //temp = Tca9548GetControlReg();//get control register from tca9548
-	  //sprintf(buf, "The value of the control register = %#x\n\r", temp);
-	  	  	  //HAL_UART_Transmit(&huart2, (uint8_t *)buf, strlen(buf), 1000); //send the value of the control register to UART2
-	  	  	  //HAL_Delay(500);
-
-
-
-    /* USER CODE END WHILE */
+	/*---------------------*/
+	//check Tca9548ResetInput
+	/*---------------------*/
+	
+	//Reset of the control register to 0x0
+	Tca9548ResetInput(TCA9548_reset, TCA9548_reset);
+	
+	//check reset the control register
+	temp = Tca9548GetControlReg();
+	//send the value of the control register to UART2
+	sprintf(buf, "The value of the control register after reset = %#x\n\r", temp);
+	HAL_UART_Transmit(&huart2, (uint8_t *)buf, strlen(buf), 100); 
+	HAL_Delay(500);
+	
+	
+	//setting of the control register to value of CH0_EN | CH2_EN = 0000 0011b
+	Tca9548SelectCh(CH0_EN | CH2_EN);
+	
+	//check seting the control register
+	temp = Tca9548GetControlReg();
+	//send the value of the control register to UART2
+	sprintf(buf, "The value of the control register after reset and again set = %#x\n\r", temp);
+	HAL_UART_Transmit(&huart2, (uint8_t *)buf, strlen(buf), 100); 
+	HAL_Delay(500);
+	
+	/*---------------------*/
+	/*check Tca9548ResetPOR*/
+	/*---------------------*/
+	
+	Tca9548ResetPOR(TCA9548_reset_POR, TCA9548_reset_POR);
+	
+	//check reset the control register
+	temp = Tca9548GetControlReg();
+	//send the value of the control register to UART2
+	sprintf(buf, "The value of the control register after reset = %#x\n\r", temp);
+	HAL_UART_Transmit(&huart2, (uint8_t *)buf, strlen(buf), 100); 
+	HAL_Delay(500);
+	
+	/* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
   }
