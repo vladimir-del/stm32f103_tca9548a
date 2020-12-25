@@ -58,8 +58,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define Reset_TCA9548_Pin GPIO_PIN_0
-#define Reset_TCA9548_GPIO_Port GPIOA
+#define tca9548_reset_Pin GPIO_PIN_0
+#define tca9548_reset_GPIO_Port GPIOA
 #define USART_TX_Pin GPIO_PIN_2
 #define USART_TX_GPIO_Port GPIOA
 #define USART_RX_Pin GPIO_PIN_3

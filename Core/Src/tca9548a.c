@@ -11,22 +11,20 @@
 
 /**
   * @brief  Setting control register .
-  * @param  channel: select a channel to turn on.
+  * @param  Channel: select a Channel to turn on.
 			This parametr defined in macros into tca9548.h CH0_EN ... CH7_EN. 
-			Can used bool operation. CH0_EN | CH7_EN == 1000 0001
+			Can used bool operation. CH0_EN | CH3_EN == 0000 1001 == 0x9
   * @retval hal status.
   */
 
-HAL_StatusTypeDef Tca9548SelectCh(uint8_t channel)
+HAL_StatusTypeDef Tca9548SelectCh(uint8_t Channel)
 {
 	uint8_t StatusReg = 0x0;
-	uint8_t temp[1] = {channel};
-	HAL_I2C_Master_Transmit(&hi2c1, TCA9548_ADDR << 1, temp, 1, 100);
-	//HAL_I2C_Mem_Write(&hi2c1, TCA9548_ADDR << 1, StatusReg, I2C_MEMADD_SIZE_8BIT, (void*)0, 0, 100);
+	uint8_t Temp[1] = {Channel};
+	HAL_I2C_Master_Transmit(&hi2c1, TCA9548_ADDR << 1, Temp, 1, 100);
 	HAL_Delay(50);
-	//HAL_I2C_Mem_Read(&hi2c1, TCA9548_ADDR << 1, channel, I2C_MEMADD_SIZE_8BIT, &StatusReg, 0, 100);
-	HAL_I2C_Master_Receive(&hi2c1, TCA9548_ADDR << 1, temp, 1, 100);
-	if (StatusReg == channel)
+	HAL_I2C_Master_Receive(&hi2c1, TCA9548_ADDR << 1, Temp, 1, 100);
+	if (StatusReg == Channel)
 		return HAL_ERROR;
 	else
 		return HAL_OK;
@@ -37,7 +35,7 @@ HAL_StatusTypeDef Tca9548SelectCh(uint8_t channel)
   * @brief  Getting control register .
   *
   * @retval The value of the control register of type uint8_t.
-  */
+ */
 
 uint8_t Tca9548GetControlReg(void)
 {
@@ -59,35 +57,12 @@ uint8_t Tca9548GetControlReg(void)
   
 HAL_StatusTypeDef Tca9548ResetInput(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
 {
-	uint8_t StatusReg = 0;
+	uint8_t StatusReg = 0x0;
 	HAL_GPIO_TogglePin(GPIOx, GPIO_Pin);
-	HAL_Delay(10);
-	HAL_GPIO_TogglePin(GPIOx, GPIO_Pin);
-	
-	HAL_I2C_Mem_Read(&hi2c1, TCA9548_ADDR << 1, (uint16_t)0, I2C_MEMADD_SIZE_8BIT, &StatusReg, 0, 100);
-	if (StatusReg == 0x0)
-		return HAL_OK;
-	else
-		return HAL_ERROR;
-}
-
-/**
-  * @brief  Reset control register .
-  * @param  GPIOx: where x can be (A..G depending on device used) to select the GPIO peripheral
-			GPIOx port configured for this function.
-  * @param  GPIO_Pin: GPIO_Pin: specifies the port bit to be toggled.
-			Pin configured for this function.
-  * @retval hal status.
-  */
-  
-HAL_StatusTypeDef Tca9548ResetPOR(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
-{
-	uint8_t StatusReg = 0;
-	HAL_GPIO_TogglePin(GPIOx, GPIO_Pin);
-	HAL_Delay(10);
+	HAL_Delay(100);
 	HAL_GPIO_TogglePin(GPIOx, GPIO_Pin);
 	
-	HAL_I2C_Mem_Read(&hi2c1, TCA9548_ADDR << 1, (uint16_t)0, I2C_MEMADD_SIZE_8BIT, &StatusReg, 0, 100);
+	HAL_I2C_Master_Receive(&hi2c1, TCA9548_ADDR << 1, &StatusReg, 1, 100);
 	if (StatusReg == 0x0)
 		return HAL_OK;
 	else
